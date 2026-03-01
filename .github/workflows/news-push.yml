@@ -1,0 +1,24 @@
+name: News Push
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  push-news:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Send news to WhatsApp
+      run: |
+        curl -X POST "https://xd.mxaly.top:16666/api/message" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "channel": "whatsapp",
+            "target": "+8613963767577",
+            "message": "📰 GitHub 代码已更新，触发新闻推送\n\n提交者: ${{ github.actor }}\n提交信息: ${{ github.event.head_commit.message }}\n时间: ${{ github.event.head_commit.timestamp }}"
+          }'

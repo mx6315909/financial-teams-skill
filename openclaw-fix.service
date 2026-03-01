@@ -1,0 +1,21 @@
+[Unit]
+Description=OpenClaw Gateway Auto-Fix
+Documentation=https://docs.openclaw.ai
+After=network-online.target
+
+# 在网关服务失败时运行
+[Service]
+Type=oneshot
+Environment="HOME=/root"
+Environment="OPENCLAW_STATE_DIR=/root/.openclaw"
+EnvironmentFile=-/root/.config/openclaw/gateway.env
+
+# 执行修复脚本
+ExecStart=/root/.openclaw/scripts/openclaw-fix.sh
+
+# 日志
+StandardOutput=append:/var/log/openclaw-fix.log
+StandardError=append:/var/log/openclaw-fix.log
+
+[Install]
+WantedBy=default.target
