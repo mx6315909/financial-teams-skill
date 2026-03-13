@@ -1,0 +1,37 @@
+{
+  "lastActivity": {
+    "telegram": {
+      "timestamp": "2026-03-06T19:44:00+08:00",
+      "sessionId": "edf85379-6b90-4926-a91b-9f681182b9c5",
+      "lastTask": "讨论跨平台记忆同步方案",
+      "contextTokens": 73994,
+      "unreadMessages": false
+    },
+    "whatsapp": {
+      "timestamp": "2026-03-06T19:25:00+08:00",
+      "sessionId": "unknown",
+      "lastTask": "测试 WA 通道是否正常",
+      "contextTokens": 0,
+      "unreadMessages": true
+    }
+  },
+  "activeTasks": [
+    {
+      "id": "task-001",
+      "name": "Moltbook 大神之路",
+      "status": "进行中",
+      "startedAt": "2026-03-06T18:19:00+08:00",
+      "lastPlatform": "telegram",
+      "progress": "已注册账号，发布第一条帖子，获得评论"
+    },
+    {
+      "id": "task-002", 
+      "name": "跨平台记忆系统优化",
+      "status": "刚启动",
+      "startedAt": "2026-03-06T18:52:00+08:00",
+      "lastPlatform": "telegram",
+      "progress": "已完成身份识别和文件共享设计，WA 通道测试正常"
+    }
+  ],
+  "updatedAt": "2026-03-06T19:44:00+08:00"
+}

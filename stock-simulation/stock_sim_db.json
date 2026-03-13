@@ -1,0 +1,227 @@
+{
+  "account": {
+    "balance": 20680.59,
+    "total_profit": 3925.59,
+    "total_value": 103925.59,
+    "initial_capital": 100000,
+    "return_rate": 3.93
+  },
+  "positions": {
+    "300113": {
+      "symbol": "顺网科技",
+      "code": "300113",
+      "shares": 1000,
+      "cost_price": 29.5,
+      "current_price": 29.69,
+      "market_value": 29690.0,
+      "profit": 190.0,
+      "profit_rate": 0.64,
+      "stop_loss": 27.14,
+      "take_profit": 35.4
+    },
+    "300438": {
+      "symbol": "鹏辉能源",
+      "code": "300438",
+      "shares": 500,
+      "cost_price": 53.05,
+      "current_price": 58.03,
+      "market_value": 29015.0,
+      "profit": 2490.0,
+      "profit_rate": 9.39,
+      "stop_loss": 48.81,
+      "take_profit": 63.66
+    },
+    "601877": {
+      "symbol": "正泰电器",
+      "code": "601877",
+      "shares": 600,
+      "cost_price": 39.2,
+      "current_price": 40.9,
+      "market_value": 24540.0,
+      "profit": 1020.0,
+      "profit_rate": 4.34,
+      "stop_loss": 36.06,
+      "take_profit": 47.04
+    }
+  },
+  "history": [
+    {
+      "date": "2026-03-10",
+      "time": "09:33",
+      "action": "BUY",
+      "symbol": "顺网科技",
+      "code": "300113",
+      "shares": 1000,
+      "price": 29.5,
+      "amount": 29500.0,
+      "fee": 7.97,
+      "total": 29507.97
+    },
+    {
+      "date": "2026-03-10",
+      "time": "09:33",
+      "action": "BUY",
+      "symbol": "鹏辉能源",
+      "code": "300438",
+      "shares": 500,
+      "price": 52.5,
+      "amount": 26250.0,
+      "fee": 7.09,
+      "total": 26257.09
+    },
+    {
+      "date": "2026-03-10",
+      "time": "09:33",
+      "action": "BUY",
+      "symbol": "正泰电器",
+      "code": "601877",
+      "shares": 600,
+      "price": 39.2,
+      "amount": 23520.0,
+      "fee": 6.35,
+      "total": 23526.35
+    },
+    {
+      "date": "2026-03-12",
+      "time": "11:07",
+      "action": "BUY",
+      "symbol": "鹏辉能源",
+      "code": "300438",
+      "shares": 100,
+      "price": 58.31,
+      "amount": 5831.0,
+      "fee": 1.58,
+      "total": 5832.58,
+      "note": "突破¥55 加仓"
+    },
+    {
+      "date": "2026-03-13",
+      "time": "14:30",
+      "action": "SELL",
+      "symbol": "鹏辉能源",
+      "code": "300438",
+      "shares": 100,
+      "price": 58.03,
+      "amount": 5803.0,
+      "fee": 4.32,
+      "total": 5798.68,
+      "note": "风控自动减仓：仓位 85.7% > 80% 上限",
+      "triggered_by": "risk-officer",
+      "approval": "blackbox_authorized"
+    }
+  ],
+  "summary": {
+    "day": 4,
+    "date": "2026-03-13",
+    "total_trades": 5,
+    "buy_count": 4,
+    "sell_count": 1,
+    "position_count": 3,
+    "position_rate": 80.1,
+    "market_benchmark": 0.5,
+    "alpha": 3.43
+  },
+  "watchlist": [
+    {
+      "code": "002261",
+      "symbol": "拓维信息",
+      "sector": "AI 应用（华为鲲鹏 + 鸿蒙）",
+      "selected_date": "2026-03-13",
+      "selected_by": "金石计划 v2.1",
+      "reason": "趋势 + 动能 + 量能筛选，AI 应用赛道，排除已持有股票",
+      "metrics": {
+        "price": 36.37,
+        "ma20": 35.66,
+        "ma60": 33.53,
+        "volume_ratio": 1.5,
+        "big_yang_date": 10,
+        "big_yang_pct": 11.96
+      },
+      "suggested_buy_price": 36.02,
+      "target_price": 48.47,
+      "stop_loss_price": 32.52,
+      "sentiment_check": {
+        "checked_date": "2026-03-13",
+        "checked_by": "舆情小弟",
+        "status": "PENDING",
+        "findings": "待审核",
+        "risk_level": "UNKNOWN"
+      }
+    },
+    {
+      "code": "002195",
+      "symbol": "岩山科技",
+      "sector": "数字经济（AI+ 互联网）",
+      "selected_date": "2026-03-13",
+      "selected_by": "金石计划 v2.1",
+      "reason": "趋势 + 动能 + 量能筛选，数字经济赛道，排除已持有股票",
+      "metrics": {
+        "price": 10.56,
+        "ma20": 10.35,
+        "ma60": 9.34,
+        "volume_ratio": 1.5,
+        "big_yang_date": 10,
+        "big_yang_pct": 7.55
+      },
+      "suggested_buy_price": 10.02,
+      "target_price": 12.07,
+      "stop_loss_price": 9.06,
+      "sentiment_check": {
+        "checked_date": "2026-03-13",
+        "checked_by": "舆情小弟",
+        "status": "PENDING",
+        "findings": "待审核",
+        "risk_level": "UNKNOWN"
+      }
+    },
+    {
+      "code": "300364",
+      "symbol": "中文在线",
+      "sector": "AI 应用（短剧 + 游戏）",
+      "selected_date": "2026-03-13",
+      "selected_by": "金石计划 v2.1",
+      "reason": "趋势 + 动能 + 量能筛选，AI 应用赛道，排除已持有股票",
+      "metrics": {
+        "price": 32.43,
+        "ma20": 31.79,
+        "ma60": 29.57,
+        "volume_ratio": 1.5,
+        "big_yang_date": 10,
+        "big_yang_pct": 3.36
+      },
+      "suggested_buy_price": 27.42,
+      "target_price": 36.56,
+      "stop_loss_price": 25.54,
+      "sentiment_check": {
+        "checked_date": "2026-03-13",
+        "checked_by": "舆情小弟",
+        "status": "PENDING",
+        "findings": "待审核",
+        "risk_level": "UNKNOWN"
+      }
+    }
+  ],
+  "version_history": [
+    {
+      "version": "2.1",
+      "date": "2026-03-13T15:58:00+08:00",
+      "changes": [
+        "新增：排除已持有股票筛选规则",
+        "更新：watchlist 更新为 3 只新候选（拓维信息、岩山科技、中文在线）",
+        "优化：选股策略 v2.1 - 避免重复推荐已持仓股票"
+      ],
+      "author": "选股小弟",
+      "approved_by": "老大"
+    },
+    {
+      "version": "2.0",
+      "date": "2026-03-13T15:35:00+08:00",
+      "changes": [
+        "初始版本：金石计划选股策略",
+        "watchlist: 汉得信息、鹏辉能源、顺网科技"
+      ],
+      "author": "选股小弟",
+      "approved_by": "老大"
+    }
+  ]
+}

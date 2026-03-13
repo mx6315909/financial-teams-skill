@@ -1,0 +1,161 @@
+{
+  "challenge_name": "7 天股票模拟操作挑战",
+  "start_date": "2026-03-10",
+  "end_date": "2026-03-16",
+  "initial_capital": 100000,
+  "currency": "CNY",
+  "trading_rules": {
+    "max_position_pct": 30,
+    "max_stocks": 5,
+    "stop_loss_pct": 8,
+    "take_profit_pct": 20,
+    "market": "A 股",
+    "trade_hours": "09:30-11:30, 13:00-15:00",
+    "entry_delay_min": 3,
+    "fees": {
+      "commission_rate": 0.00025,
+      "commission_min": 5,
+      "stamp_duty_rate": 0.0005,
+      "transfer_fee_rate": 2e-05
+    }
+  },
+  "portfolio": {
+    "cash": 22952.21,
+    "cash_locked": 0,
+    "positions": [
+      {
+        "stock_code": "300113",
+        "stock_name": "顺网科技",
+        "quantity": 1000,
+        "cost_price": 29.5,
+        "cost_basis": 29507.97,
+        "current_price": 26.92,
+        "market_value": 26920,
+        "profit_loss": -2587.97,
+        "profit_loss_pct": -8.75,
+        "stop_loss_price": 27.14,
+        "take_profit_price": 35.4,
+        "buy_date": "2026-03-10",
+        "buy_time": "09:33",
+        "fees_paid": {
+          "commission": 7.38,
+          "transfer_fee": 0.59,
+          "total": 7.97
+        },
+        "warning": "⚠️ 距离止损价仅差¥0.23 (-0.84%)",
+        "stop_loss_triggered": true,
+        "stop_loss_trigger_time": "2026-03-13 14:XX (未执行)"
+      },
+      {
+        "stock_code": "300438",
+        "stock_name": "鹏辉能源",
+        "quantity": 450,
+        "cost_price": 53.05,
+        "cost_basis": 23877.25,
+        "current_price": 57.75,
+        "market_value": 25987.5,
+        "profit_loss": 2110.25,
+        "profit_loss_pct": 8.86,
+        "stop_loss_price": 48.81,
+        "take_profit_price": 63.66,
+        "buy_date": "2026-03-10",
+        "buy_time": "09:33",
+        "add_date": "2026-03-12",
+        "add_time": "11:07",
+        "add_quantity": 100,
+        "add_price": 58.31,
+        "sell_date": "2026-03-13",
+        "sell_time": "11:30",
+        "sell_quantity": 150,
+        "sell_price": 57.76,
+        "fees_paid": {
+          "commission": 5.97,
+          "transfer_fee": 0.48,
+          "stamp_duty": 4.33,
+          "total": 10.78
+        }
+      },
+      {
+        "stock_code": "601877",
+        "stock_name": "正泰电器",
+        "quantity": 600,
+        "cost_price": 39.2,
+        "cost_basis": 23526.35,
+        "current_price": 38.33,
+        "market_value": 22998,
+        "profit_loss": -528.35,
+        "profit_loss_pct": -2.22,
+        "stop_loss_price": 36.06,
+        "take_profit_price": 47.04,
+        "buy_date": "2026-03-10",
+        "buy_time": "09:33",
+        "fees_paid": {
+          "commission": 5.88,
+          "transfer_fee": 0.47,
+          "total": 6.35
+        }
+      }
+    ],
+    "total_market_value": 75905.5,
+    "total_cost_basis": 76911.57,
+    "total_fees_paid": 25.1,
+    "total_value": 98857.70999999999,
+    "daily_return": -1142.2900000000081,
+    "daily_return_pct": -1.142290000000008,
+    "total_return": -1142.2900000000081,
+    "total_return_pct": -1.142290000000008,
+    "position_pct": 76.7825797299978,
+    "cash_pct": 22.5
+  },
+  "team": [
+    "投顾专家",
+    "行业研究员",
+    "投行专家",
+    "市值管理助理",
+    "财富专员",
+    "商机助理",
+    "企业舆情助理"
+  ],
+  "status": "trading",
+  "current_day": 4,
+  "created_at": "2026-03-09T23:17:00+08:00",
+  "last_updated": "2026-03-13T17:35:00+08:00",
+  "trades_today": [
+    {
+      "time": "11:30",
+      "stock_code": "300438",
+      "stock_name": "鹏辉能源",
+      "action": "sell",
+      "quantity": 150,
+      "price": 57.76,
+      "amount": 8664,
+      "fees": 10.78,
+      "net_amount": 8653.22,
+      "reason": "仓位修复（85.7%→77.5%）+ 锁定利润"
+    }
+  ],
+  "warnings": [
+    {
+      "stock": "顺网科技 (300113)",
+      "type": "stop_loss_alert",
+      "message": "当前价¥27.37，距离止损价¥27.14 仅差¥0.23 (-0.84%)",
+      "action": "密切关注，若跌破¥27.14 坚决止损"
+    }
+  ],
+  "next_action": {
+    "type": "monitor",
+    "time": "15:30",
+    "description": "Day 4 收盘总结 - 获取真实收盘价，计算实际盈亏"
+  },
+  "incident": {
+    "date": "2026-03-13",
+    "type": "stop_loss_not_triggered",
+    "description": "顺网科技跌破止损价¥27.14，但自动止损系统未执行",
+    "stock": "300113 顺网科技",
+    "stop_loss_price": 27.14,
+    "close_price": 26.92,
+    "loss_extra": 219.99999999999886,
+    "cause": "浏览器故障，无法获取实时股价；盘中监控未预警",
+    "lesson": "必须确保实时股价获取可靠；止损预警必须提前触发"
+  }
+}

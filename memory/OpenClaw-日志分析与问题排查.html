@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 日志分析与问题排查指南</title>
+    <style>
+        :root {
+            --primary: #ff6b35;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #e74c3c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header .meta {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-size: 1.4em;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fef9e7;
+            border-left: 5px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .danger-box {
+            background: #fdedec;
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box {
+            background: #e9f7ef;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: var(--secondary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light);
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        code {
+            background: #2d3436;
+            color: #fab1a0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        pre::before {
+            content: "BASH";
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        .badge-danger { background: var(--danger); color: white; }
+        .badge-info { background: #3498db; color: white; }
+        
+        .tree {
+            font-family: "Courier New", Courier, monospace;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .tree li {
+            list-style: none;
+            padding: 5px 0;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .step-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        footer {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            pre { border: 1px solid #ddd; }
+        }
+        
+        @media (max-width: 768px) {
+            .content { padding: 20px; }
+            header h1 { font-size: 1.8em; }
+            table { font-size: 0.9em; }
+            pre { padding: 15px; }
+        }
+        
+        .emoji { font-size: 1.3em; margin-right: 5px; }
+        
+        .log-success { color: var(--success); font-weight: bold; }
+        .log-error { color: var(--danger); font-weight: bold; }
+        .log-warning { color: var(--warning); font-weight: bold; }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        
+        .toc a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .toc a:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦞 OpenClaw 日志分析与问题排查指南</h1>
+            <div class="meta">
+                <p>📅 整理时间：2026-03-09 21:44 | 🐳 群晖 Docker 部署 | 📊 版本：v2026.3.2 → v2026.3.8</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <!-- 目录 -->
+            <div class="toc">
+                <h3>📑 目录</h3>
+                <ul>
+                    <li><a href="#overview">📋 问题总览</a></li>
+                    <li><a href="#config">🔧 最终正确配置</a></li>
+                    <li><a href="#workflow">🚀 标准操作流程</a></li>
+                    <li><a href="#logs">📊 常见日志分析</a></li>
+                    <li><a href="#security">🔐 安全警告说明</a></li>
+                    <li><a href="#structure">📁 目录结构</a></li>
+                    <li><a href="#troubleshoot">🛠️ 故障排查命令</a></li>
+                    <li><a href="#lessons">📝 核心教训总结</a></li>
+                </ul>
+            </div>
+
+            <!-- 问题总览 -->
+            <section id="overview">
+                <h2>📋 问题总览</h2>
+                <div class="info-box">
+                    <p><span class="emoji">💡</span>以下是升级过程中遇到的 5 类核心问题及其解决方案：</p>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>问题类型</th>
+                            <th>具体表现</th>
+                            <th>根本原因</th>
+                            <th>解决方案</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-danger">配置加载</span></td>
+                            <td><code>Missing config</code> 循环报错</td>
+                            <td>3.2 版本改用 node 用户 (UID 1000)，无法访问 /root 目录</td>
+                            <td>挂载到 <code>/home/node/.openclaw</code> + <code>user: "1000:1000"</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-warning">权限拒绝</span></td>
+                            <td><code>EACCES: permission denied</code></td>
+                            <td>宿主机文件夹所有者为 root</td>
+                            <td><code>chown -R 1000:1000</code> + <code>chmod -R 777</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-info">参数校验</span></td>
+                            <td><code>Invalid --bind</code></td>
+                            <td>3.2 版本收严参数校验</td>
+                            <td>改为 <code>--bind "auto"</code> 或 <code>--bind "lan"</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-danger">Token 冲突</span></td>
+                            <td><code>hooks.token must not match</code></td>
+                            <td>3.2 版本强制要求两个 Token 不同</td>
+                            <td>设置不同的 Token 值</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-warning">容器残留</span></td>
+                            <td>虚拟容器无法删除</td>
+                            <td>Docker Compose 切换镜像时逻辑锁死</td>
+                            <td><code>docker-compose down --remove-orphans</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 最终配置 -->
+            <section id="config">
+                <h2>🔧 最终正确配置</h2>
+                
+                <h3>docker-compose.yml (3.8 版本兼容)</h3>
+                <div class="warning-box">
+                    <p><span class="emoji">⚠️</span>注意：<code>user: "1000:1000"</code> 是关键配置，必须与宿主机权限匹配！</p>
+                </div>
+                <pre>version: "3.8"
+
+services:
+  openclaw-gateway:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw-gateway
+    user: "1000:1000"  # 🎯 关键：匹配镜像内 node 用户
+    cap_add:
+      - SYS_ADMIN
+    shm_size: '2gb'
+    volumes:
+      - /volume1/docker/openclaw/openclaw-config:/home/node/.openclaw
+      - /volume1/docker/openclaw/openclaw-config/openclaw.json:/app/openclaw.json
+      - /volume1/docker/openclaw/data:/app/data
+      - /volume1/docker/openclaw/openclaw-config/workspace:/home/node/.openclaw/workspace
+    environment:
+      - TZ=Asia/Shanghai
+      - NODE_ENV=production
+      - OPENCLAW_CONFIG_PATH=/home/node/.openclaw/openclaw.json
+      - OPENCLAW_DATA_DIR=/home/node/.openclaw
+    ports:
+      - 18789:18789
+    command: ["node", "openclaw.mjs", "gateway", "--bind", "lan", "--port", "18789", "--allow-unconfigured"]
+    restart: unless-stopped
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser-openclaw
+    user: "0:0"  # 📁 文件管理器维持 root 权限
+    volumes:
+      - /volume1/docker/openclaw/openclaw-config:/srv/openclaw
+      - /volume1/docker/openclaw/data:/srv/data
+      - /volume1/docker/openclaw/filebrowser-config:/database
+    environment:
+      - TZ=Asia/Shanghai
+    command: ["--database", "/database/filebrowser.db", "--root", "/srv"]
+    ports:
+      - 2081:80
+    restart: unless-stopped</pre>
+
+                <h3>openclaw.json (关键配置)</h3>
+                <div class="danger-box">
+                    <p><span class="emoji">🔒</span>注意：<code>hooks.token</code> 必须与 <code>gateway.auth.token</code> 不同！</p>
+                </div>
+                <pre>{
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "auto",
+    "auth": {
+      "mode": "token",
+      "token": "hOvg8TeakuzWFleGygaO84T1vxm8IH9sK1JcVU4FNcjtq3hh"
+    }
+  },
+  "hooks": {
+    "enabled": true,
+    "token": "HOOK_AUTH_TOKEN_UNIQUE_302"  // 🎯 必须不同
+  },
+  "models": {
+    "providers": {
+      "bailian": {
+        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "apiKey": "sk-sp-ccc6c5350af24177a02f106ef66ea319",
+        "models": [{"id": "kimi-k2.5", "name": "kimi-k2.5"}]
+      }
+    }
+  }
+}</pre>
+            </section>
+
+            <!-- 标准操作流程 -->
+            <section id="workflow">
+                <h2>🚀 标准操作流程</h2>
+                
+                <div class="step-card">
+                    <h4>📦 步骤 1：首次部署/升级前准备</h4>
+                    <pre># 1. 创建必要目录
+mkdir -p /volume1/docker/openclaw/{openclaw-config,data,filebrowser-config}
+
+# 2. 设置权限（关键！）
+sudo chown -R 1000:1000 /volume1/docker/openclaw/openclaw-config
+sudo chown -R 1000:1000 /volume1/docker/openclaw/data
+sudo chmod -R 777 /volume1/docker/openclaw/openclaw-config
+sudo chmod -R 777 /volume1/docker/openclaw/data</pre>
+                </div>
+
+                <div class="step-card">
+                    <h4>⬆️ 步骤 2：升级流程 (3.2 → 3.8)</h4>
+                    <pre># 1. 拉取新镜像（容器可运行中）
+docker pull ghcr.io/openclaw/openclaw:latest
+
+# 2. 清理残留（如有虚拟容器）
+cd /volume1/docker/openclaw
+docker-compose down --remove-orphans
+docker container prune -f
+
+# 3. 强制重建
+docker-compose up -d --force-recreate
+
+# 4. 验证版本
+docker logs openclaw-gateway | grep "OpenClaw"</pre>
+                </div>
+
+                <div class="step-card">
+                    <h4>🔄 步骤 3：日常重启</h4>
+                    <pre># 仅重启网关（修改配置后）
+docker restart openclaw-gateway
+
+# 完整项目重启（修改 docker-compose.yml 后）
+cd /volume1/docker/openclaw
+docker-compose restart</pre>
+                </div>
+            </section>
+
+            <!-- 日志分析 -->
+            <section id="logs">
+                <h2>📊 常见日志分析</h2>
+                
+                <h3>✅ 正常启动日志</h3>
+                <div class="success-box">
+                    <p>看到以下内容说明启动成功：</p>
+                </div>
+                <pre><span class="log-success">[canvas] host mounted at http://0.0.0.0:18789/__openclaw__/canvas/</span>
+<span class="log-success">[gateway] listening on ws://0.0.0.0:18789 (PID 14)</span>
+<span class="log-success">[heartbeat] started</span>
+<span class="log-success">[health-monitor] started</span>
+<span class="log-success">[gateway] agent model: bailian/kimi-k2.5</span>
+<span class="log-success">[whatsapp] Listening for personal WhatsApp inbound messages.</span>
+<span class="log-success">[telegram] [default] starting provider (@mxnas_qwen_bot)</span></pre>
+
+                <h3>❌ 典型错误日志</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>错误信息</th>
+                            <th>原因</th>
+                            <th>修复</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>Missing config</code></td>
+                            <td>配置文件路径不对或权限不足</td>
+                            <td>检查挂载路径 + <code>chmod 777</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>EACCES: permission denied</code></td>
+                            <td>文件所有者不是 UID 1000</td>
+                            <td><code>chown -R 1000:1000</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>Invalid --bind</code></td>
+                            <td>使用了不支持的绑定地址</td>
+                            <td>改为 <code>auto</code>/<code>lan</code>/<code>loopback</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>hooks.token must not match</code></td>
+                            <td>两个 Token 相同</td>
+                            <td>设置不同的 Token</td>
+                        </tr>
+                        <tr>
+                            <td><code>No active WhatsApp Web listener</code></td>
+                            <td>WhatsApp 未扫码登录</td>
+                            <td>UI 中 Channels → WhatsApp 扫码</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 安全警告 -->
+            <section id="security">
+                <h2>🔐 安全警告说明</h2>
+                <div class="info-box">
+                    <p><span class="emoji">ℹ️</span>以下警告在内网环境可忽略，生产环境应关闭：</p>
+                </div>
+                <pre><span class="log-warning">⚠️ gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true is enabled</span>
+<span class="log-warning">⚠️ gateway.controlUi.dangerouslyDisableDeviceAuth=true</span>
+<span class="log-warning">⚠️ gateway.controlUi.allowInsecureAuth=true</span></pre>
+                <p>这些是开发/内网环境的便捷配置，允许不安全的认证方式。如果暴露在公网，建议关闭这些选项。</p>
+            </section>
+
+            <!-- 目录结构 -->
+            <section id="structure">
+                <h2>📁 目录结构</h2>
+                <div class="tree">
+                    <ul>
+                        <li>📂 /volume1/docker/openclaw/
+                            <ul>
+                                <li>📄 docker-compose.yml</li>
+                                <li>📂 openclaw-config/ <span class="badge badge-info">挂载到 /home/node/.openclaw</span>
+                                    <ul>
+                                        <li>📄 openclaw.json <span class="badge badge-warning">主配置</span></li>
+                                        <li>📂 workspace/ <span class="badge badge-info">工作区文件</span></li>
+                                        <li>📂 cron/ <span class="badge badge-info">定时任务</span></li>
+                                        <li>📂 ... <span class="badge badge-info">运行时生成的文件</span></li>
+                                    </ul>
+                                </li>
+                                <li>📂 data/ <span class="badge badge-info">挂载到 /app/data</span>
+                                    <ul>
+                                        <li>📂 sessions/ <span class="badge badge-info">会话数据</span></li>
+                                        <li>📂 telegram/ <span class="badge badge-info">Telegram 状态</span></li>
+                                    </ul>
+                                </li>
+                                <li>📂 filebrowser-config/
+                                    <ul>
+                                        <li>📄 filebrowser.db <span class="badge badge-info">FileBrowser 数据库</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 故障排查 -->
+            <section id="troubleshoot">
+                <h2>🛠️ 故障排查命令</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>查看实时日志</strong>
+                        <pre>docker logs -f openclaw-gateway</pre>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>查看容器状态</strong>
+                        <pre>docker ps -a | grep openclaw</pre>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>进入容器检查文件</strong>
+                        <pre>docker exec -it openclaw-gateway ls -la /home/node/.openclaw/</pre>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>检查宿主机权限</strong>
+                        <pre>ls -la /volume1/docker/openclaw/openclaw-config/</pre>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>测试配置文件</strong>
+                        <pre>cat /volume1/docker/openclaw/openclaw-config/openclaw.json | head -20</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 核心教训 -->
+            <section id="lessons">
+                <h2>📝 核心教训总结</h2>
+                
+                <div class="warning-box">
+                    <h4>🎯 5 条关键经验</h4>
+                    <ol style="margin-left: 20px; margin-top: 15px;">
+                        <li style="margin-bottom: 10px;"><strong>Docker 容器升级原则</strong>：容器是"不可变"的，升级靠换镜像，NOT 容器内 <code>npm install</code></li>
+                        <li style="margin-bottom: 10px;"><strong>权限问题根因</strong>：3.2+ 版本以 UID 1000 (node 用户) 运行，宿主机文件夹必须 <code>chown 1000:1000</code></li>
+                        <li style="margin-bottom: 10px;"><strong>配置路径变更</strong>：不再使用 <code>/root/.openclaw</code>，改用 <code>/home/node/.openclaw</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Token 安全加固</strong>：<code>hooks.token</code> 和 <code>gateway.auth.token</code> 必须不同</li>
+                        <li style="margin-bottom: 10px;"><strong>升级后必做</strong>：每次升级后重新执行 <code>chown</code> 和 <code>chmod</code> 权限修复</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>🦞 OpenClaw 日志分析与问题排查指南 | 文档版本：1.0 | 最后更新：2026-03-09</p>
+            <p>适用版本：OpenClaw v2026.3.2 - v2026.3.8 | 📧 整理自群晖 Docker 部署实战</p>
+        </footer>
+    </div>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 代码块复制功能
+        document.querySelectorAll('pre').forEach(pre => {
+            const button = document.createElement('button');
+            button.textContent = '📋 复制';
+            button.style.cssText = 'position:absolute;top:10px;right:10px;padding:5px 10px;background:var(--primary);color:white;border:none;border-radius:5px;cursor:pointer;';
+            pre.style.position = 'relative';
+            pre.appendChild(button);
+            
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code') || pre;
+                navigator.clipboard.writeText(code.textContent);
+                button.textContent = '✅ 已复制';
+                setTimeout(() => button.textContent = '📋 复制', 2000);
+            });
+        });
+    </script>
+</body>
+</html>

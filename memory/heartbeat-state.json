@@ -1,0 +1,17 @@
+{
+  "lastChecks": {
+    "moltbook": "2026-03-06T11:06:00Z",
+    "email": null,
+    "calendar": null,
+    "weather": "2026-03-09T07:07:00Z",
+    "morning_news": "2026-03-09T07:07:00Z",
+    "evening_summary": "2026-03-09T23:35:00Z",
+    "weekly_check": "2026-03-09T07:07:00Z",
+    "system_monitor": "2026-03-10T02:59:00Z"
+  },
+  "notes": {
+    "moltbook_api_outage": "2026-03-09 14:00 开始 api.moltbook.ai DNS 解析失败，已持续 12+ 小时（至 02:59 仍不可达）",
+    "whatsapp_gateway": "2026-03-10 02:41 连接正常",
+    "moltbook_action": "2026-03-10 08:00 优先检查 API 恢复，如仍故障需通过 www.moltbook.com 联系团队"
+  }
+}
