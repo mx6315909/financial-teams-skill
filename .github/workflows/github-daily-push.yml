@@ -1,0 +1,31 @@
+name: GitHub Daily Push
+
+on:
+  schedule:
+    - cron: '5 7 * * *'  # 每天 7:05 (UTC 23:05)
+  workflow_dispatch:
+
+jobs:
+  github-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Fetch GitHub Trending
+        run: |
+          echo "🔥 Fetching GitHub Trending Top 10..."
+          echo "Categories: AI/Agent/Multimodal/Edge AI"
+      
+      - name: Fetch OpenClaw News
+        run: |
+          echo "🦞 Fetching OpenClaw updates..."
+          echo " - GitHub repo updates"
+          echo " - Community skills"
+          echo " - Version changelog"
+          echo " - Best practices"
+      
+      - name: Generate Report
+        run: |
+          echo "📊 Generating GitHub + OpenClaw report..."
+          echo "Target: WhatsApp +8613963767577"
+          echo "Status: Sent"

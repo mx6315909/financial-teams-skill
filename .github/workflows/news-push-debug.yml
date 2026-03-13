@@ -1,0 +1,27 @@
+name: News Push Debug
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Test network connectivity
+      run: |
+        echo "Testing gh.mxaly.top..."
+        ping -c 3 gh.mxaly.top || echo "Ping failed"
+        
+        echo ""
+        echo "Testing with curl..."
+        curl -v https://gh.mxaly.top:16666/health 2>&1 || echo "Curl failed"
+        
+    - name: Send test notification
+      run: |
+        MESSAGE="🧪 测试消息 from GitHub Actions"
+        
+        echo "Sending to WhatsApp..."
+        curl -v -X POST "https://gh.mxaly.top:16666/api/message" \
+          -H "Content-Type: application/json" \
+          -d "{\"channel\": \"whatsapp\", \"target\": \"+8613963767577\", \"message\": \"$MESSAGE\"}" 2>&1

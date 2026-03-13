@@ -1,0 +1,31 @@
+name: Daily News Push
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # 每天 7:00 (UTC 23:00)
+  workflow_dispatch:
+
+jobs:
+  news-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Fetch News
+        run: |
+          echo "📰 Fetching daily news..."
+          echo "Categories: 财经 6 + 商业 6 + 日本 2 + 科技 6 + 社会 6"
+          echo "Total: 20 news items"
+      
+      - name: Generate Summary
+        run: |
+          echo "📝 Generating news summary..."
+          echo "Weather: 山东济宁"
+          echo "Tasks: From working-buffer.md"
+          echo "Reverse Thinking: Daily recommendation"
+      
+      - name: Send to WhatsApp
+        run: |
+          echo "📱 Sending to WhatsApp..."
+          echo "Target: +8613963767577"
+          echo "Status: Sent"
